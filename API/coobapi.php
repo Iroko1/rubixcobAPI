@@ -1,9 +1,26 @@
 <?php
 
 header('Content-Type: application/json');
+session_start();
+include "../model/apiKey.php";
+include "../model/rubicoob_db.php";
 
-if (isset($_GET['apiKey'])) {
-    
+if (isset($_GET['APIKey'])) {
+    if (!validateKey(filter_input(INPUT_GET, 'APIKey'))) {
+        echo json_encode(['error' => 'Invalid API Key']);
+        exit();
+    }
+}
+if (isset($_GET['length'])) {
+    $result = json_encode(scramble(filter_input(INPUT_GET, 'length')));
+    echo $result;
+    recordRequest($_SESSION['email'], $_SESSION['key'], date("Y-m-d H:i:s"), $result);
+    exit();
+} else {
+    $result = json_encode(scramble(20));
+    echo $result;
+    recordRequest($_SESSION['email'], $_SESSION['key'], date("Y-m-d H:i:s"), $result);
+    exit();
 }
 
 
@@ -24,7 +41,9 @@ function lastid($ls, $item) {
 // makes a scramble list (robot instructions)
 function scramble($num) {
     $scramblelist = [];
-    $moveset = ['U', 'D', 'L', 'R', 'F', 'B', 'U2', 'D2', 'L2', 'R2', 'F2', 'B2', "U'", "D'", "L'", "R'", "F'", "B'"];
+    $moveset = ['U', 'D', 'L', 'R', 'F', 'B', 
+                'U2', 'D2', 'L2', 'R2', 'F2', 'B2', 
+                "U'", "D'", "L'", "R'", "F'", "B'"];
     $restrict = [
         'U' => ['D', "D'", 'D2'],
         'D' => ['U', "U'", 'U2'],
