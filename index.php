@@ -46,17 +46,13 @@ if (isset($_SESSION['loggedIn'])) {
                 $email = filter_input(INPUT_POST, 'email');
                 $key = filter_input(INPUT_POST, 'key');
                 if (validateUser($email, $key)) {
-                    echo "<h2>Success!</h2>";
-                    echo "<p>You are now logged in</p>";
-                    echo "<p><a href='./'>Home</a></p>";
+                    include "view/loginSuccess.php";
                     $_SESSION['email'] = $email;
                     $_SESSION['key'] = $key;
                     $_SESSION['loggedIn'] = true;
                     exit();
                 } else {
-                    echo "<h2>Failed!</h2>";
-                    echo "<p>Invalid key</p>";
-                    echo "<p><a href='./?action=login'>Login</a></p>";
+                    include "view/loginFail.php";
                     exit();
                 }
             } else {
@@ -76,17 +72,10 @@ if (isset($_SESSION['loggedIn'])) {
                 $key = generateApiKey($email);
                 [$success, $error] = registerUser($email, $key);
                 if ($success) {
-                    echo "<h2>Success!</h2>";
-                    echo "<p>Your API key is: $key</p>";
-                    echo "<p>Keep this key safe, you will need it to login to the API</p>";
-                    echo "<p><a href='./?action=login'>Login</a></p>";
+                    include "view/registerSuccess.php";
                     exit();
                 } else {
-                    echo "<h2>Failed!</h2>";
-                    echo "<p>There was an error registering your account</p>";
-                    echo "<p>Error: $error</p>";
-                    echo "<p>Please try again</p>";
-                    echo "<p><a href='./?action=register'>Register</a></p>";
+                    include "view/registerFail.php";
                     exit();
                 }
             } else {
@@ -111,16 +100,10 @@ if (isset($_SESSION['loggedIn'])) {
                     include "model/rubicoob_db.php";
                     [$success, $error] = deleteRecord($RequestID);
                     if ($success) {
-                        echo "<h2>Success!</h2>";
-                        echo "<p>Record deleted</p>";
-                        echo "<p><a href='./?action=API'>API</a></p>";
+                        include "view/deleteSuccess.php";
                         exit();
                     } else {
-                        echo "<h2>Failed!</h2>";
-                        echo "<p>There was an error deleting the record</p>";
-                        echo "<p>Error: $error</p>";
-                        echo "<p>Please try again</p>";
-                        echo "<p><a href='./?action=API'>API</a></p>";
+                        include "view/deleteFail.php";
                         exit();
                     }
                 }
@@ -137,7 +120,7 @@ if (isset($_SESSION['loggedIn'])) {
 
 </div>
 
-
+<?php include "view/footer.php"; ?>
 
 
 </body>
