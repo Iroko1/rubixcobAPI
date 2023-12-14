@@ -65,7 +65,7 @@ if (isset($_SESSION['loggedIn'])) {
             break;
 
         case 'logOut':
-            include "model/apiKey.php";
+            include "model/rubicoob_db.php";
             destroySession();
             break;
         case 'register':
